@@ -11,6 +11,7 @@
 
 from flask import Flask, redirect, url_for
 from pymongo import MongoClient
+from markdown import markdown
 import os, json
 config = json.load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")))
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def index():
 def show_article(article_title):
     article = db.articles.find_one({"title": article_title})
     if article:
-        return article["content"]
+        return markdown(article_title + "\n======\n\n" + article["content"])
     else:
         return "This page does not exist. You can create or search the page you wanted to find."
 
