@@ -19,18 +19,24 @@ client = MongoClient(config["database"]["server"], config["database"]["port"])
 db = client[config["database"]["db"]]
 
 @app.route("/")
-@app.route("/wiki")
-@app.route("/wiki/")
 def index():
-    return redirect('/wiki/대문')
+    return redirect('/read/대문')
 
-@app.route("/wiki/<article_title>")
+@app.route("/read/<article_title>")
 def show_article(article_title):
     article = db.articles.find_one({"title": article_title})
     if article:
         return markdown(article_title + "\n======\n\n" + article["content"])
     else:
         return "This page does not exist. You can create or search the page you wanted to find."
+
+@app.route("/edit/<article_title>")
+def edit_article(article_title):
+	return "this is a stub."
+
+@app.route("/save/<article_title>", methods=['POST'])
+def save_article(article_title):
+	return "this is a stub."
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=config["misc"]["debug"])
