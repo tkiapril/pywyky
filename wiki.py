@@ -10,11 +10,14 @@
 #
 
 from flask import Flask
+from pymongo import MongoClient
 app = Flask(__name__)
+client = MongoClient()
+db = client.pywyky
 
 @app.route("/")
 def hello():
-    return "Hello Wiki!"
+    return db.documents.find_one({"title": "대문"})["content"]
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0")
