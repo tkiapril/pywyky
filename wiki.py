@@ -9,17 +9,27 @@
 # added on 2014-07-07
 #
 
-from flask import Flask
+from flask import Flask, redirect, url_for
 from pymongo import MongoClient
 import os, json
 config = json.load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "config.json")))
 app = Flask(__name__)
 client = MongoClient(config["database"]["server"], config["database"]["port"])
-db = client.pywyky
+db = client[config["database"]["db"]]
 
 @app.route("/")
-def hello():
-    return db.documents.find_one({"title": "대문"})["content"]
+@app.route("/wiki")
+@app.route("/wiki/")
+def index():
+    return redirect('/wiki/대문')
+
+@app.route("/wiki/<article_title>")
+def show_article(article_title):
+    article = db.articles.find_one({"title": article_title})
+    if article:
+        return article["content"]
+    else:
+        return "This page does not exist. You can create or search the page you wanted to find."
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=config["misc"]["debug"])
