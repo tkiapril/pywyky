@@ -1,0 +1,12 @@
+{
+    "database":
+    {
+        "type": "mongodb",
+        "server": "localhost",
+        "port": 27017
+    },
+    "misc":
+    {
+        "debug": false
+    }
+}
